@@ -1,0 +1,31 @@
+name: Atualizar imagem SVG
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # roda todo dia às 00:00 UTC
+  workflow_dispatch:      # permite executar manualmente
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Node instalado
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Gerar imagem
+        run: node gerarSvg.js
+
+      - name: Commitar arquivo
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Imagem atualizada automaticamente"
+          file_pattern: "*.svg"
